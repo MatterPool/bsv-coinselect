@@ -1,6 +1,6 @@
 {
-  "name": "coinselect",
-  "version": "3.1.12",
+  "name": "bsv-coinselect",
+  "version": "4.0.0",
   "description": "A transaction input selection module for bitcoin.",
   "keywords": [
     "coinselect",
@@ -16,9 +16,9 @@
     "optimizing",
     "bitcoin"
   ],
-  "homepage": "https://github.com/bitcoinjs/coinselect",
+  "homepage": "https://github.com/MatterPool/bsv-coinselect",
   "bugs": {
-    "url": "https://github.com/bitcoinjs/coinselect/issues"
+    "url": "https://github.com/MatterPool/bsv-coinselect/issues"
   },
   "license": "MIT",
   "author": "Daniel Cousens",
@@ -33,7 +33,7 @@
   "main": "index.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/bitcoinjs/coinselect.git"
+    "url": "git+https://github.com/MatterPool/bsv-coinselect.git"
   },
   "scripts": {
     "coverage": "nyc --check-coverage --branches 100 --functions 100 tape test/*.js",
@@ -46,5 +46,8 @@
     "standard": "*",
     "tape": "^4.5.1"
   },
-  "dependencies": {}
+  "dependencies": {},
+  "directories": {
+    "test": "test"
+  }
 }
