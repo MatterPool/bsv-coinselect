@@ -4,7 +4,7 @@ var TX_INPUT_BASE = 32 + 4 + 1 + 4
 var TX_INPUT_PUBKEYHASH = 107
 var TX_OUTPUT_BASE = 8 + 1
 var TX_OUTPUT_PUBKEYHASH = 25
-
+var TX_DUST_THRESHOLD = 546;
 function inputBytes (input) {
   return TX_INPUT_BASE + (input.script ? input.script.length : TX_INPUT_PUBKEYHASH)
 }
@@ -15,7 +15,7 @@ function outputBytes (output) {
 
 function dustThreshold (output, feeRate) {
   /* ... classify the output for input estimate  */
-  return inputBytes({}) * feeRate
+  return TX_DUST_THRESHOLD;
 }
 
 function transactionBytes (inputs, outputs) {
