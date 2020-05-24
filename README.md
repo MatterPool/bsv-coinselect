@@ -3,15 +3,16 @@
 > https://matterpool.io
 > Originally forked from https://github.com/bitcoinjs/coinselect
 
-
 [![js-standard-style](https://cdn.rawgit.com/feross/standard/master/badge.svg)](https://github.com/feross/standard)
 
 ## Problem and Overview
 
-Working with Unspent transaction outputs (UTXO) you are faced with choices on which "coins" to use for creating transactions.
+Working with Unspent transaction outputs (UTXO) the developer must choose which "coins" to use for creating transactions.
 For instance, the developer may want to *use the minimal number of UTXOs to pay all outputs at a given fee rate*.
 
-This library makes it easy to select UTXO's.
+This library makes it easy to select UTXO's according different policies.
+
+This is a client-side library only and can be used in any Javascript project. If you need to fetch UTXO's or broadcast BSV transactions then use the Filepay library at http://github.com/mattercloud/filepay which makes use of `bsv-coinselect`
 
 ```javascript
 
