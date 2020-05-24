@@ -1,5 +1,4 @@
 var utils = require('./utils')
-
 // add inputs until we reach or surpass the target value (or deplete)
 // worst-case: O(n)
 module.exports = function accumulative (utxos, outputs, feeRate, changeScript) {
