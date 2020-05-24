@@ -1,8 +1,11 @@
 {
   "name": "bsv-coinselect",
-  "version": "4.0.11",
-  "description": "A transaction input selection module for bitcoin.",
+  "version": "4.0.12",
+  "description": "A transaction input selection module for Bitcoin SV (BSV)",
   "keywords": [
+    "bitcoin-sv",
+    "satoshi-vision",
+    "bsv",
     "coinselect",
     "coin",
     "unspents",
@@ -21,7 +24,6 @@
     "url": "https://github.com/MatterPool/bsv-coinselect/issues"
   },
   "license": "MIT",
-  "author": "Daniel Cousens",
   "files": [
     "accumulative.js",
     "blackjack.js",

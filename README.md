@@ -1,12 +1,135 @@
 # bsv-coinselect
+> An unspent transaction output (UTXO) selection module for Bitcoin SV.
+> https://matterpool.io
+> Originally forked from https://github.com/bitcoinjs/coinselect
 
-[![NPM](http://img.shields.io/npm/v/coinselect.svg)](https://www.npmjs.org/package/bsv-coinselect)
 
 [![js-standard-style](https://cdn.rawgit.com/feross/standard/master/badge.svg)](https://github.com/feross/standard)
 
-An unspent transaction output (UTXO) selection module for Bitcoin SV.
+## Problem and Overview
 
-**WARNING:** Value units are in `satoshi`s, **not** Bitcoin.
+Working with Unspent transaction outputs (UTXO) you are faced with choices on which "coins" to use for creating transactions.
+For instance, the developer may want to *use the minimal number of UTXOs to pay all outputs at a given fee rate*.
+
+This library makes it easy to select UTXO's.
+
+```javascript
+
+const utxos = [
+  {
+    "address": "1CgPDEav5fdzry3V7tGADY4rHqG8oi4kfv",
+    "txid": "a939afcb78a06239f02eefbfaabc6e0a78dfe3cd64f9676932cc1195796fa42f",
+    "vout": 1,
+    "value": 1000,
+    "height": 617496,
+    "confirmations": 18639,
+    "scriptPubKey": "76a914801c259a527abd83a977fd90a06b22d215fcad4988ac",
+    "script": "76a914801c259a527abd83a977fd90a06b22d215fcad4988ac",
+    "outputIndex": 1
+  },
+  {
+    "address": "1CgPDEav5fdzry3V7tGADY4rHqG8oi4kfv",
+    "txid": "716e6b12d111984818d8c5e6d68446a52746d480d397d077cad598d55f059a65",
+    "vout": 1,
+    "value": 5000,
+    "height": 616468,
+    "confirmations": 19667,
+    "scriptPubKey": "76a914801c259a527abd83a977fd90a06b22d215fcad4988ac",
+    "script": "76a914801c259a527abd83a977fd90a06b22d215fcad4988ac",
+    "outputIndex": 1
+  },
+  {
+    "address": "1CgPDEav5fdzry3V7tGADY4rHqG8oi4kfv",
+    "txid": "98e0987b5b5783ae083814f448f1dda52c18c881beda649c36576d0c81ee31f9",
+    "vout": 1,
+    "value": 10004,
+    "height": 610466,
+    "confirmations": 25669,
+    "scriptPubKey": "76a914801c259a527abd83a977fd90a06b22d215fcad4988ac",
+    "script": "76a914801c259a527abd83a977fd90a06b22d215fcad4988ac",
+    "outputIndex": 1
+  }
+];
+
+const outputs = [
+  {
+    script: '76a914801c259a527abd83a977fd90a06b22d215fcad4988ac',
+    value: 1000,
+  },
+  {
+    script: '76a914801c259a527abd83a977fd90a06b22d215fcad4988ac',
+    value: 546,
+  },
+  {
+    script: '76a914801c259a527abd83a977fd90a06b22d215fcad4988ac',
+    value: 1000,
+  },
+  {
+    script: '76a914801c259a527abd83a977fd90a06b22d215fcad4988ac',
+    value: 10000,
+  },
+];
+const changeScript = null; // Optional, set to arbitrary p2ph or script. Ex: '76a914801c259a527abd83a977fd90a06b22d215fcad4988ac'
+const { inputs, outputs, fee } = coinSelect(utxos, outputs, 0.5, null);
+// https://whatsonchain.com/tx/81576866d8c796540cfdb3f75d67d469e683fe506a0676eb2e9f9ee1876b7e1d
+```
+
+Sample response:
+
+```javascript
+{
+  fee: 232,
+  inputs: [
+    {
+      "address": "1CgPDEav5fdzry3V7tGADY4rHqG8oi4kfv",
+      "txid": "98e0987b5b5783ae083814f448f1dda52c18c881beda649c36576d0c81ee31f9",
+      "vout": 1,
+      "value": 10004,
+      "height": 610466,
+      "confirmations": 25669,
+      "scriptPubKey": "76a914801c259a527abd83a977fd90a06b22d215fcad4988ac",
+      "script": "76a914801c259a527abd83a977fd90a06b22d215fcad4988ac",
+      "outputIndex": 1
+    },
+    {
+      "address": "1CgPDEav5fdzry3V7tGADY4rHqG8oi4kfv",
+      "txid": "716e6b12d111984818d8c5e6d68446a52746d480d397d077cad598d55f059a65",
+      "vout": 1,
+      "value": 5000,
+      "height": 616468,
+      "confirmations": 19667,
+      "scriptPubKey": "76a914801c259a527abd83a977fd90a06b22d215fcad4988ac",
+      "script": "76a914801c259a527abd83a977fd90a06b22d215fcad4988ac",
+      "outputIndex": 1
+    },
+  ],
+  "outputs": [
+    {
+      script: '76a914801c259a527abd83a977fd90a06b22d215fcad4988ac',
+      value: 1000,
+    },
+    {
+      script: '76a914801c259a527abd83a977fd90a06b22d215fcad4988ac',
+      value: 546,
+    },
+    {
+      script: '76a914801c259a527abd83a977fd90a06b22d215fcad4988ac',
+      value: 1000,
+    },
+    {
+      script: '76a914801c259a527abd83a977fd90a06b22d215fcad4988ac',
+      value: 10000,
+    },
+    {
+      // This is the change script. Set to 'null', 'undefined', or valid script
+      // or use bsv.Transaction.changeAddress() and setting this to undefined
+      script: null,
+      "value": 2226
+    }
+  ]
+};
+
+```
 
 ## Algorithms
 Module | Algorithm | Re-orders UTXOs?
