@@ -1,6 +1,6 @@
 {
   "name": "bsv-coinselect",
-  "version": "4.0.7",
+  "version": "4.0.8",
   "description": "A transaction input selection module for bitcoin.",
   "keywords": [
     "coinselect",
