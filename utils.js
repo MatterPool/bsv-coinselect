@@ -32,6 +32,11 @@ function uintOrNaN (v) {
   return v
 }
 
+function numberOrNaN(v) {
+  if (typeof v !== 'number') return NaN
+  return v;
+}
+
 function sumForgiving (range) {
   return range.reduce(function (a, x) { return a + (isFinite(x.value) ? x.value : 0) }, 0)
 }
@@ -70,5 +75,6 @@ module.exports = {
   sumOrNaN: sumOrNaN,
   sumForgiving: sumForgiving,
   transactionBytes: transactionBytes,
-  uintOrNaN: uintOrNaN
+  uintOrNaN: uintOrNaN,
+  numberOrNaN: numberOrNaN
 }
