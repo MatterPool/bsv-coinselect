@@ -2,7 +2,7 @@ var utils = require('./utils')
 
 // only add inputs if they don't bust the target value (aka, exact match)
 // worst-case: O(n)
-module.exports = function blackjack (utxos, outputs, feeRate) {
+module.exports = function blackjack (utxos, outputs, feeRate, changeScript) {
   if (!isFinite(utils.numberOrNaN(feeRate))) return {}
 
   var bytesAccum = utils.transactionBytes([], outputs)
@@ -29,7 +29,7 @@ module.exports = function blackjack (utxos, outputs, feeRate) {
     // go again?
     if (inAccum < outAccum + fee) continue
 
-    return utils.finalize(inputs, outputs, feeRate)
+    return utils.finalize(inputs, outputs, feeRate, changeScript)
   }
   var fee = Math.round(Math.ceil(feeRate * bytesAccum));
   return { fee: fee }

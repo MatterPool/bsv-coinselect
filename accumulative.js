@@ -34,7 +34,7 @@ module.exports = function accumulative (utxos, outputs, feeRate) {
     // go again?
     if (inAccum < outAccum + fee) continue
 
-    return utils.finalize(inputs, outputs, feeRate)
+    return utils.finalize(inputs, outputs, feeRate, changeScript)
   }
   var fee = Math.round(Math.ceil(feeRate * bytesAccum));
   return { fee: fee }

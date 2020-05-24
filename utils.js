@@ -47,14 +47,17 @@ function sumOrNaN (range) {
 
 var BLANK_OUTPUT = outputBytes({})
 
-function finalize (inputs, outputs, feeRate) {
+function finalize (inputs, outputs, feeRate, changeScript) {
   var bytesAccum = transactionBytes(inputs, outputs)
   var feeAfterExtraOutput = feeRate * (bytesAccum + BLANK_OUTPUT)
   var remainderAfterExtraOutput = sumOrNaN(inputs) - (sumOrNaN(outputs) + feeAfterExtraOutput)
 
   // is it worth a change output?
   if (remainderAfterExtraOutput > dustThreshold({}, feeRate)) {
-    outputs = outputs.concat({ value: Math.round(remainderAfterExtraOutput) - 1 })
+    outputs = outputs.concat({
+      value: Math.round(remainderAfterExtraOutput) - 1,
+      script: changeScript ? changeScript : undefined
+    })
   }
 
   var fee = sumOrNaN(inputs) - sumOrNaN(outputs)
