@@ -54,12 +54,15 @@ function finalize (inputs, outputs, feeRate) {
 
   // is it worth a change output?
   if (remainderAfterExtraOutput > dustThreshold({}, feeRate)) {
-    outputs = outputs.concat({ value: remainderAfterExtraOutput })
+    outputs = outputs.concat({ value: Math.round(remainderAfterExtraOutput) - 1 })
   }
 
   var fee = sumOrNaN(inputs) - sumOrNaN(outputs)
-  if (!isFinite(fee)) return { fee: feeRate * bytesAccum }
-
+  fee = Math.round(Math.ceil(fee));
+  if (!isFinite(fee)) {
+    var fee = Math.round(Math.ceil(feeRate * bytesAccum));
+    return { fee: fee }
+  }
   return {
     inputs: inputs,
     outputs: outputs,

@@ -18,7 +18,10 @@ module.exports = function accumulative (utxos, outputs, feeRate) {
 
     // skip detrimental input
     if (utxoFee > utxo.value) {
-      if (i === utxos.length - 1) return { fee: feeRate * (bytesAccum + utxoBytes) }
+      if (i === utxos.length - 1){
+        var fee = Math.round(Math.ceil(feeRate * (bytesAccum + utxoBytes)));
+        return { fee: fee }
+      }
       continue
     }
 
