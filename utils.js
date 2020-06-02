@@ -1,16 +1,16 @@
 // baseline estimates, used to improve performance
-var TX_EMPTY_SIZE = 4 + 1 + 1 + 4
-var TX_INPUT_BASE = 32 + 4 + 1 + 4
-var TX_INPUT_PUBKEYHASH = 107
-var TX_OUTPUT_BASE = 8 + 1
-var TX_OUTPUT_PUBKEYHASH = 25
+var TX_EMPTY_SIZE = (4 + 1 + 1 + 4) * 2;  // Added buffer of 400 just in case
+var TX_INPUT_BASE = (32 + 4 + 1 + 4) * 2; // Multiple by 2 to correctly account for bytes
+var TX_INPUT_PUBKEYHASH = (107) * 2;
+var TX_OUTPUT_BASE = (8 + 1) * 2;
+var TX_OUTPUT_PUBKEYHASH = (25) * 2
 var TX_DUST_THRESHOLD = 546;
 function inputBytes (input) {
   return TX_INPUT_BASE + (input.script ? input.script.length : TX_INPUT_PUBKEYHASH)
 }
 
 function outputBytes (output) {
-  return TX_OUTPUT_BASE + (output.script ? output.script.length : TX_OUTPUT_PUBKEYHASH)
+  return TX_OUTPUT_BASE + (output.script ? output.script.length / 2 : TX_OUTPUT_PUBKEYHASH)
 }
 
 function dustThreshold (output, feeRate) {
