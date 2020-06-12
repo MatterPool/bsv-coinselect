@@ -3,8 +3,6 @@
 > https://matterpool.io
 > Originally forked from https://github.com/bitcoinjs/coinselect
 
-[![js-standard-style](https://cdn.rawgit.com/feross/standard/master/badge.svg)](https://github.com/feross/standard)
-
 ## Problem and Overview
 
 Working with Unspent transaction outputs (UTXO) the developer must choose which "coins" to use for creating transactions.
@@ -13,6 +11,8 @@ For instance, the developer may want to *use the minimal number of UTXOs to pay 
 This library makes it easy to select UTXO's according different policies.
 
 This is a client-side library only and can be used in any Javascript project. If you need to fetch UTXO's or broadcast BSV transactions then use the Filepay library at http://github.com/mattercloud/filepay which makes use of `bsv-coinselect`
+
+**NOTE:** Force a UTXO to be selected by specifying `required: true`
 
 ```javascript
 
@@ -26,7 +26,8 @@ const utxos = [
     "confirmations": 18639,
     "scriptPubKey": "76a914801c259a527abd83a977fd90a06b22d215fcad4988ac",
     "script": "76a914801c259a527abd83a977fd90a06b22d215fcad4988ac",
-    "outputIndex": 1
+    "outputIndex": 1,
+    "required": true // Optional. If set, then forces use of this utxo
   },
   {
     "address": "1CgPDEav5fdzry3V7tGADY4rHqG8oi4kfv",
@@ -138,14 +139,9 @@ Module | Algorithm | Re-orders UTXOs?
 `require('coinselect')` | Blackjack, with Accumulative fallback | By Descending Value
 `require('coinselect/accumulative')` | Accumulative - accumulates inputs until the target value (+fees) is reached, skipping detrimental inputs | -
 `require('coinselect/blackjack')` | Blackjack - accumulates inputs until the target value (+fees) is matched, does not accumulate inputs that go over the target value (within a threshold) | -
-`require('coinselect/break')` | Break - breaks the input values into equal denominations of `output` (as provided) | -
-`require('coinselect/split')` | Split - splits the input values evenly between all `outputs`, any provided `output` with `.value` remains unchanged | -
-
 
 **Note:** Each algorithm will add a change output if the `input - output - fee` value difference is over a dust threshold.
 This is calculated independently by `utils.finalize`, irrespective of the algorithm chosen, for the purposes of safety.
-
-**Pro-tip:** if you want to send-all inputs to an output address, `coinselect/split` with a partial output (`.address` defined, no `.value`) can be used to send-all, while leaving an appropriate amount for the `fee`.
 
 ## Example
 

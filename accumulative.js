@@ -5,11 +5,20 @@ module.exports = function accumulative (utxos, outputs, feeRate, changeScript) {
   if (!isFinite(utils.numberOrNaN(feeRate))) return {}
   var bytesAccum = utils.transactionBytes([], outputs)
 
-  var inAccum = 0
-  var inputs = []
+  // Always add required utxos
+  const addedRequiredUtxosStatus = utils.addRequiredInputs(utxos);
+  var inAccum = addedRequiredUtxosStatus.inAccum;                 // Add the value from required utxos
+  bytesAccum += addedRequiredUtxosStatus.bytesAccum;              // Add the total bytes from required utxos
+  var requiredInputs = addedRequiredUtxosStatus.requiredInputs;   // Non-required utxo's remaining (if any)
+  var inputs = requiredInputs;
   var outAccum = utils.sumOrNaN(outputs)
+  // Perform a test to see if transaction can be finalized
+  var fee = Math.round(Math.ceil(feeRate * bytesAccum));
+  if (inAccum >= outAccum + fee) {
+    return utils.finalize(inputs, outputs, feeRate, changeScript)
+  }
 
-  for (var i = 0; i < utxos.length; ++i) {
+  for (var i = 0; i < addedRequiredUtxosStatus.nonRequiredInputs.length; ++i) {
     var utxo = utxos[i]
     var utxoBytes = utils.inputBytes(utxo)
     var utxoFee = feeRate * utxoBytes

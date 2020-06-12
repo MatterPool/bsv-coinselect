@@ -47,6 +47,31 @@ function sumOrNaN (range) {
 
 var BLANK_OUTPUT = outputBytes({})
 
+function addRequiredInputs(inputs) {
+  let requiredInputs = [];
+  let nonRequiredInputs = [];
+  let bytesAccum = 0;
+  let inAccum = 0;
+  for (const input of inputs) {
+    if (input.required) {
+      requiredInputs.push(input);
+      var utxoBytes = utils.inputBytes(input)
+      var utxoValue = utils.uintOrNaN(input.value)
+      bytesAccum += utxoBytes
+      inAccum += utxoValue
+    } else {
+      nonRequiredInputs.push(input);
+    }
+  }
+
+  return {
+    bytesAccum: bytesAccum,
+    requiredInputs: requiredInputs,
+    inAccum: inAccum,
+    nonRequiredInputs: nonRequiredInputs,
+  }
+}
+
 function finalize (inputs, outputs, feeRate, changeScript) {
   var bytesAccum = transactionBytes(inputs, outputs)
   var feeAfterExtraOutput = feeRate * (bytesAccum + BLANK_OUTPUT)
@@ -79,6 +104,7 @@ function finalize (inputs, outputs, feeRate, changeScript) {
 module.exports = {
   dustThreshold: dustThreshold,
   finalize: finalize,
+  addRequiredInputs: addRequiredInputs,
   inputBytes: inputBytes,
   outputBytes: outputBytes,
   sumOrNaN: sumOrNaN,
