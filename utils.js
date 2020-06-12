@@ -55,8 +55,8 @@ function addRequiredInputs(inputs) {
   for (const input of inputs) {
     if (input.required) {
       requiredInputs.push(input);
-      var utxoBytes = utils.inputBytes(input)
-      var utxoValue = utils.uintOrNaN(input.value)
+      var utxoBytes = inputBytes(input)
+      var utxoValue = uintOrNaN(input.value)
       bytesAccum += utxoBytes
       inAccum += utxoValue
     } else {
