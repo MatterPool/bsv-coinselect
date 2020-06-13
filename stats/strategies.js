@@ -1,44 +1,8 @@
 const accumulative = require('../accumulative')
-const blackjack = require('../blackjack')
 const shuffle = require('fisher-yates')
 const shuffleInplace = require('fisher-yates/inplace')
 const coinSelect = require('../')
 const utils = require('../utils')
-
-function blackmax (utxos, outputs, feeRate) {
-  // order by ascending value
-  utxos = utxos.concat().sort((a, b) => a.value - b.value)
-
-  // attempt to use the blackjack strategy first (no change output)
-  const base = blackjack(utxos, outputs, feeRate)
-  if (base.inputs) return base
-
-  // else, try the accumulative strategy
-  return accumulative(utxos, outputs, feeRate)
-}
-
-function blackmin (utxos, outputs, feeRate) {
-  // order by descending value
-  utxos = utxos.concat().sort((a, b) => b.value - a.value)
-
-  // attempt to use the blackjack strategy first (no change output)
-  const base = blackjack(utxos, outputs, feeRate)
-  if (base.inputs) return base
-
-  // else, try the accumulative strategy
-  return accumulative(utxos, outputs, feeRate)
-}
-
-function blackrand (utxos, outputs, feeRate) {
-  utxos = shuffle(utxos)
-
-  // attempt to use the blackjack strategy first (no change output)
-  const base = blackjack(utxos, outputs, feeRate)
-  if (base.inputs) return base
-
-  // else, try the accumulative strategy
-  return accumulative(utxos, outputs, feeRate)
-}
 
 function maximal (utxos, outputs, feeRate) {
   utxos = utxos.concat().sort((a, b) => a.value - b.value)
@@ -128,10 +92,6 @@ function privet (utxos, outputs, feeRate) {
 module.exports = {
   accumulative,
   bestof,
-  blackjack,
-  blackmax,
-  blackmin,
-  blackrand,
   coinSelect,
   FIFO,
   maximal,

@@ -79,7 +79,6 @@ function finalize (inputs, outputs, feeRate, changeScript) {
 
   // is it worth a change output?
   if (remainderAfterExtraOutput > dustThreshold({}, feeRate)) {
-
     if (changeScript || changeScript === null) {
       outputs = outputs.concat({
         value: Math.round(remainderAfterExtraOutput) - 1,

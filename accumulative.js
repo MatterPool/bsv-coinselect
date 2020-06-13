@@ -12,6 +12,7 @@ module.exports = function accumulative (utxos, outputs, feeRate, changeScript) {
   var requiredInputs = addedRequiredUtxosStatus.requiredInputs;   // Non-required utxo's remaining (if any)
   var inputs = requiredInputs;
   var outAccum = utils.sumOrNaN(outputs)
+
   // Perform a test to see if transaction can be finalized
   var fee = Math.round(Math.ceil(feeRate * bytesAccum));
   if (inAccum >= outAccum + fee) {

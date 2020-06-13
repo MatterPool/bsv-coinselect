@@ -1,6 +1,6 @@
 {
   "name": "bsv-coinselect",
-  "version": "4.1.1",
+  "version": "4.2.1",
   "description": "A transaction input selection module for Bitcoin SV (BSV)",
   "keywords": [
     "bitcoin-sv",
@@ -26,7 +26,6 @@
   "license": "MIT",
   "files": [
     "accumulative.js",
-    "blackjack.js",
     "index.js",
     "utils.js"
   ],

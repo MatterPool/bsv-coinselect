@@ -136,9 +136,8 @@ Sample response:
 ## Algorithms
 Module | Algorithm | Re-orders UTXOs?
 -|-|-
-`require('coinselect')` | Blackjack, with Accumulative fallback | By Descending Value
+`require('coinselect')` | Accumulative - accumulates inputs until the target value (+fees) is reached, skipping
 `require('coinselect/accumulative')` | Accumulative - accumulates inputs until the target value (+fees) is reached, skipping detrimental inputs | -
-`require('coinselect/blackjack')` | Blackjack - accumulates inputs until the target value (+fees) is matched, does not accumulate inputs that go over the target value (within a threshold) | -
 
 **Note:** Each algorithm will add a change output if the `input - output - fee` value difference is over a dust threshold.
 This is calculated independently by `utils.finalize`, irrespective of the algorithm chosen, for the purposes of safety.
