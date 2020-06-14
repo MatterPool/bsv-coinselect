@@ -5,12 +5,35 @@ var TX_INPUT_PUBKEYHASH = (107) * 2;
 var TX_OUTPUT_BASE = (8 + 1) * 2;
 var TX_OUTPUT_PUBKEYHASH = (25) * 2
 var TX_DUST_THRESHOLD = 546;
+
+/**
+ * Take care to check string or Script length
+ */
 function inputBytes (input) {
-  return TX_INPUT_BASE + (input.script ? input.script.length : TX_INPUT_PUBKEYHASH)
+  var scriptLen = 0;
+  if (input.script && input.script.toHex) {
+    scriptLen = (input.script.toHex()).length;
+  } else if (input.script) {
+    scriptLen = input.script.length;
+  } else {
+    scriptLen = TX_INPUT_PUBKEYHASH;
+  }
+  return TX_INPUT_BASE + scriptLen;
 }
 
+/**
+ * Take care to check string or Script length
+ */
 function outputBytes (output) {
-  return TX_OUTPUT_BASE + (output.script ? output.script.length / 2 : TX_OUTPUT_PUBKEYHASH)
+  var scriptLen = 0;
+  if (output.script && output.script.toHex) {
+    scriptLen = (output.script.toHex()).length / 2;
+  } else if (output.script) {
+    scriptLen = output.script.length / 2;
+  } else {
+    scriptLen = TX_OUTPUT_PUBKEYHASH;
+  }
+  return TX_OUTPUT_BASE + scriptLen;
 }
 
 function dustThreshold (output, feeRate) {
@@ -19,9 +42,14 @@ function dustThreshold (output, feeRate) {
 }
 
 function transactionBytes (inputs, outputs) {
-  return TX_EMPTY_SIZE +
-    inputs.reduce(function (a, x) { return a + inputBytes(x) }, 0) +
-    outputs.reduce(function (a, x) { return a + outputBytes(x) }, 0)
+  // We have to seperate out the variables or we get a NaN
+  // Strange why the function worked before
+  const inSum = inputs.reduce(function (a, x) { return a + inputBytes(x) }, 0);
+  const outSum = outputs.reduce(function (a, x) { return a + outputBytes(x) }, 0);
+  if (isNaN(inSum) || isNaN(outSum)) {
+    throw new Error('Input outputs isNaN');
+  }
+  return TX_EMPTY_SIZE + inSum + outSum;
 }
 
 function uintOrNaN (v) {
@@ -63,7 +91,6 @@ function addRequiredInputs(inputs) {
       nonRequiredInputs.push(input);
     }
   }
-
   return {
     bytesAccum: bytesAccum,
     requiredInputs: requiredInputs,
