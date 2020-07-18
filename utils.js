@@ -106,12 +106,10 @@ function finalize (inputs, outputs, feeRate, changeScript) {
 
   // is it worth a change output?
   if (remainderAfterExtraOutput > dustThreshold({}, feeRate)) {
-    if (changeScript) {
-      outputs = outputs.concat({
-        value: Math.round(remainderAfterExtraOutput) - 1,
-        script: changeScript
-      })
-    }
+    outputs = outputs.concat({
+      value: Math.round(remainderAfterExtraOutput) - 1,
+      script: changeScript ?  changeScript : null
+    })
   }
 
   var fee = sumOrNaN(inputs) - sumOrNaN(outputs)
