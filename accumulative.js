@@ -6,15 +6,15 @@ module.exports = function accumulative (utxos, outputs, feeRate, changeScript) {
   var bytesAccum = utils.transactionBytes([], outputs)
 
   // Always add required utxos
-  const addedRequiredUtxosStatus = utils.addRequiredInputs(utxos);
-  var inAccum = addedRequiredUtxosStatus.inAccum;                 // Add the value from required utxos
-  bytesAccum += addedRequiredUtxosStatus.bytesAccum;              // Add the total bytes from required utxos
-  var requiredInputs = addedRequiredUtxosStatus.requiredInputs;   // Non-required utxo's remaining (if any)
-  var inputs = requiredInputs;
+  const addedRequiredUtxosStatus = utils.addRequiredInputs(utxos)
+  var inAccum = addedRequiredUtxosStatus.inAccum // Add the value from required utxos
+  bytesAccum += addedRequiredUtxosStatus.bytesAccum // Add the total bytes from required utxos
+  var requiredInputs = addedRequiredUtxosStatus.requiredInputs // Non-required utxo's remaining (if any)
+  var inputs = requiredInputs
   var outAccum = utils.sumOrNaN(outputs)
 
   // Perform a test to see if transaction can be finalized
-  var fee = Math.round(Math.ceil(feeRate * bytesAccum));
+  var fee = Math.round(Math.ceil(feeRate * bytesAccum))
   if (inAccum >= outAccum + fee) {
     return utils.finalize(inputs, outputs, feeRate, changeScript)
   }
@@ -27,9 +27,9 @@ module.exports = function accumulative (utxos, outputs, feeRate, changeScript) {
 
     // skip detrimental input
     if (utxoFee > utxo.value) {
-      if (i === utxos.length - 1){
-        var fee = Math.round(Math.ceil(feeRate * (bytesAccum + utxoBytes)));
-        return { fee: fee }
+      if (i === utxos.length - 1) {
+        var innerFee = Math.round(Math.ceil(feeRate * (bytesAccum + utxoBytes)))
+        return { fee: innerFee }
       }
       continue
     }
@@ -38,13 +38,12 @@ module.exports = function accumulative (utxos, outputs, feeRate, changeScript) {
     inAccum += utxoValue
     inputs.push(utxo)
 
-    var fee = Math.round(Math.ceil(feeRate * bytesAccum));
-
+    var cumulativeFee = Math.round(Math.ceil(feeRate * bytesAccum))
     // go again?
-    if (inAccum < outAccum + fee) continue
+    if (inAccum < outAccum + cumulativeFee) continue
 
     return utils.finalize(inputs, outputs, feeRate, changeScript)
   }
-  var fee = Math.round(Math.ceil(feeRate * bytesAccum));
-  return { fee: fee }
+  var feeEnd = Math.round(Math.ceil(feeRate * bytesAccum))
+  return { fee: feeEnd }
 }
